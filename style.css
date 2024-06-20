@@ -1,0 +1,319 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald&display=swap');
+
+img {
+    margin-top: 30px;
+    max-width: 85%;
+    max-height: 85%;
+}
+
+.newBadge {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    width: 35px;
+    height: 20px;
+    text-align: center;
+    font-size: 14px;
+    background-color: #21a2e1;
+    animation: fade-in 0.3s ease-in-out;
+    color: white;
+}
+
+.show_hidden_checkbox {
+    position: absolute;
+    right: 5%;
+    padding: 10px;
+}
+
+.show_hidden {
+    size: 20px;
+}
+
+
+.filtration {
+}
+
+
+.radio-toolbar {
+    display: flex;
+    justify-content: center;
+}
+
+.radio-toolbar input[type="radio"] {
+    display: none;
+}
+
+.radio-toolbar label {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+
+.radio-toolbar input[type="radio"]:checked + label {
+    background-color: #007bff;
+    color: white;
+}
+
+.radio-toolbar input[type="radio"]:not(:checked) + label {
+    color: #ececec;
+}
+
+
+
+nav {
+    margin-left: 5%;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-direction: row;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    position: sticky;
+    background: linear-gradient(90deg, rgba(71,69,72,1) 0%, rgba(111,111,111,1) 100%);
+    color: #FFFFFF;
+    top: 0;
+    z-index: 100;
+    padding: 3rem 20px;
+}
+
+body {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    margin:0;
+    padding:0;
+    min-height: 100vh;
+
+    background: aliceblue;
+    display: flex;
+    flex-direction: column;
+}
+
+.product_type {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    margin: 5px;
+}
+.star {
+    width: 20px;
+    height: 20px;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    background: gray;
+}
+
+.full {
+    background: #f1d243;
+}
+
+main {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.star-container {
+    display: inline-flex;
+    justify-content: center;
+    margin: 0 5px 5px 0;
+}
+
+.product__list {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.price__container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    margin: 5px;
+}
+img {
+    transition: all 0.2s linear 0s;
+
+}
+.image {
+    height: 265px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s linear 0s;
+}
+
+li {
+    /*border: solid 1px;*/
+    position: relative;
+    justify-content: center;
+    list-style: none;
+    width: 240px;
+    height: 450px;
+    text-align: center;
+    background-color: #eaeaea;
+}
+
+.product__info {
+    /*border: solid 1px;*/
+    position: absolute;
+    width: 100%;
+    bottom: 5px;
+    text-align: center;
+}
+
+.price {
+
+}
+
+.discount {
+    /*TODO*/
+    transition: 0.5s;
+    color: red;
+}
+
+.old__price {
+    text-decoration: line-through;
+}
+
+.product {
+    margin: 15px;
+    position: relative;
+    height: 400px;
+    background-color: aliceblue;
+    transition: all 0.2s linear 0s;
+    display: flex;
+    justify-content: center;
+}
+
+li:hover .old__price {
+    display: none;
+}
+
+li:hover .discount {
+    color: black;
+}
+
+li:hover .product {
+    height: 85%;
+}
+
+li:hover .add_to_cart {
+    animation: fade-in 0.7s ease-in-out;
+    display: inline;
+    bottom: 10px;
+}
+
+li:hover .image {
+
+    height: 250px;
+}
+.add_to_cart:hover {
+    background: #0385c9;
+    display: inline;
+}
+
+li:hover .newBadge {
+    visibility: hidden;
+    animation: fade-in 0.7s ease-in-out;
+}
+
+li:hover::after .newBadge {
+    animation: fade-in 0.7s ease-in-out;
+}
+
+li:hover .product_actions {
+    visibility: visible;
+    animation: fade-in 0.5s ease-in-out;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.product_description {
+    text-align: center;
+    line-height: 24px;
+    height: 24px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 5px 8px 5px 8px;
+}
+
+.add_to_cart {
+    position: absolute;
+    display: none;
+    border-width: 0;
+    background: #21a2e1;
+    color: white;
+    width: 120px;
+    text-align: center;
+    text-transform: uppercase;
+    height: 30px;
+    left: calc(50% - 60px);
+    cursor: pointer;
+}
+
+.product_actions {
+    visibility: hidden;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    right: 5px;
+    top: 8px;
+
+}
+
+.hidden_button, .like_button, .comparison_button {
+
+    background-color: #d3d1d1;
+    border: none;
+    color: black;
+    margin: 4px 2px;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+}
+
+i {
+    margin: auto;
+}
+
+.hidden_button:active {
+    background-color: blue;
+}
+
+.test {
+    border-width: 5px;
+    border-color: green;
+}
+
+footer {
+    margin-top: auto;
+    background: linear-gradient(90deg, rgba(71,69,72,1) 0%, rgba(111,111,111,1) 100%);
+    color: #FFFFFF;
+    padding: 20px 0;
+}
