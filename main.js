@@ -1,12 +1,6 @@
-const radioButtons = document.querySelectorAll('.radio-toolbar input[type="radio"]');
-radioButtons.forEach(radio => {
-    radio.addEventListener('change', function () {
-        radioButtons.forEach(rb => {
-            rb.checked = false;
-        });
-        radio.checked = true;
-    });
-});
+let selection = 'ALL';
+
+showProducts();
 
 document.querySelector('nav').addEventListener('click', function (e) {
     if (e.target.classList.contains('radio-toolbar')) {
@@ -17,7 +11,72 @@ document.querySelector('nav').addEventListener('click', function (e) {
     showProducts(selection);
 });
 
-let selection = 'ALL';
+function showProducts() {
+    clearProducts();
+
+    let products = getProducts();
+    if (selection === 'FAVOURITES') {
+        products = products.filter(p => isProductInFavourites(p))
+    } else if (selection === 'COMPARISON') {
+        products = products.filter(p => isProductInComparison(p))
+    }
+
+    products.forEach(product => showProduct(product));
+}
+
+function showProduct(product) {
+    const isHiddenProduct = isHidden(product);
+    if (isHiddenProduct && notVisible()) {
+        return;
+    }
+
+    const ul = document.querySelector('ul');
+    const elem = document.createElement('li');
+
+    elem.append(productItem.content.cloneNode(true));
+    populateProductElement(elem, product);
+    setButtonsState(elem, product);
+
+    if (isHiddenProduct) {
+        elem.style = "opacity: 0.5";
+    }
+
+    ul.append(elem);
+}
+
+function populateProductElement(elem, product) {
+    elem.id = 'product' + product.id;
+
+    const price = elem.querySelector('.discount');
+    price.textContent = product.price + '$';
+
+    const oldPrice = elem.querySelector('.old__price')
+    oldPrice.textContent = product.priceWithoutDiscount + '$'
+
+    const image = elem.querySelector('img')
+    image.src = product.image
+
+    const description = elem.querySelector('.product_description');
+    description.textContent = product.description;
+
+    const type = elem.querySelector('.product_type');
+    type.textContent = product.productType;
+
+    setButtonsValues(elem);
+    createStars(elem, product.rating);
+}
+
+function setButtonsState(elem, product) {
+    if (getHiddenProducts().has('product' + product.id)) {
+        elem.querySelector(".hidden_button").classList = "hidden_button_active";
+    }
+    if (getFavouriteProducts().has('product' + product.id)) {
+        elem.querySelector(".like_button").classList = "like_button_active";
+    }
+    if (getProductsInComparison().has('product' + product.id)) {
+        elem.querySelector(".comparison_button").classList = "comparison_button_active";
+    }
+}
 
 function createStars(elem, rating) {
     const starsContainer = elem.querySelector('.star-container');
@@ -45,7 +104,6 @@ function createStars(elem, rating) {
         star.className = "star";
         starsContainer.append(star);
     }
-
 }
 
 function setButtonsValues(elem) {
@@ -59,29 +117,6 @@ function setButtonsValues(elem) {
     comparisonButton.value = elem.id;
 }
 
-function populateProductElement(elem, product) {
-    elem.id = 'product' + product.id;
-
-    const price = elem.querySelector('.discount');
-    price.textContent = product.price;
-
-    const oldPrice = elem.querySelector('.old__price')
-    oldPrice.textContent = product.priceWithoutDiscount
-
-    const image = elem.querySelector('img')
-    image.src = product.image
-
-    const description = elem.querySelector('.product_description');
-    description.textContent = product.description;
-
-    const type = elem.querySelector('.product_type');
-    type.textContent = product.productType;
-
-    setButtonsValues(elem);
-
-    createStars(elem, product.rating);
-}
-
 function getHiddenProducts() {
     const hiddenProducts = localStorage.getItem('hiddenProducts');
 
@@ -92,21 +127,14 @@ function getHiddenProducts() {
     return new Set(hiddenProducts.split(',').filter(e => e));
 }
 
-function clearProducts() {
-    document.querySelector('.product__list').innerHTML = '';
-}
+function getFavouriteProducts() {
+    const favouriteProducts = localStorage.getItem('favouriteProducts');
 
-function switchProductLike(product) {
-    const favouriteProducts = getFavouriteProducts();
-
-    if (favouriteProducts.has(product)) {
-        favouriteProducts.delete(product);
-    } else {
-        favouriteProducts.add(product);
+    if (favouriteProducts == null) {
+        return new Set();
     }
 
-    localStorage.setItem('favouriteProducts', Array.from(favouriteProducts).toString());
-    showProducts();
+    return new Set(favouriteProducts.split(',').filter(e => e));
 }
 
 function getProductsInComparison() {
@@ -117,19 +145,6 @@ function getProductsInComparison() {
     }
 
     return new Set(productsInComparison.split(',').filter(e => e));
-}
-
-function switchProductComparison(product) {
-    const productsInComparison = getProductsInComparison();
-
-    if (productsInComparison.has(product)) {
-        productsInComparison.delete(product);
-    } else {
-        productsInComparison.add(product);
-    }
-
-    localStorage.setItem('productsInComparison', Array.from(productsInComparison).toString());
-    showProducts();
 }
 
 function switchProductVisibility(product) {
@@ -145,41 +160,38 @@ function switchProductVisibility(product) {
     showProducts();
 }
 
+function switchProductLike(product) {
+    const favouriteProducts = getFavouriteProducts();
+
+    if (favouriteProducts.has(product)) {
+        favouriteProducts.delete(product);
+    } else {
+        favouriteProducts.add(product);
+    }
+
+    localStorage.setItem('favouriteProducts', Array.from(favouriteProducts).toString());
+    showProducts();
+}
+
+function switchProductComparison(product) {
+    const productsInComparison = getProductsInComparison();
+
+    if (productsInComparison.has(product)) {
+        productsInComparison.delete(product);
+    } else {
+        productsInComparison.add(product);
+    }
+
+    localStorage.setItem('productsInComparison', Array.from(productsInComparison).toString());
+    showProducts();
+}
+
+function clearProducts() {
+    document.querySelector('.product__list').innerHTML = '';
+}
+
 function isHidden(product) {
     return getHiddenProducts().has('product' + product.id);
-}
-
-function notVisible() {
-    return !document.querySelector('#show_hidden').checked;
-}
-
-function showProduct(product) {
-    const isHiddenProduct = isHidden(product);
-    if (isHiddenProduct && notVisible()) {
-        return;
-    }
-
-    const ul = document.querySelector('ul');
-    const elem = document.createElement('li');
-
-    elem.append(productItem.content.cloneNode(true));
-    populateProductElement(elem, product);
-
-    if (isHiddenProduct) {
-        elem.style = "opacity: 0.5";
-    }
-
-    ul.append(elem);
-}
-
-function getFavouriteProducts() {
-    const favouriteProducts = localStorage.getItem('favouriteProducts');
-
-    if (favouriteProducts == null) {
-        return new Set();
-    }
-
-    return new Set(favouriteProducts.split(',').filter(e => e));
 }
 
 function isProductInFavourites(product) {
@@ -190,22 +202,19 @@ function isProductInComparison(product) {
     return getProductsInComparison().has('product' + product.id)
 }
 
-function showProducts() {
-    clearProducts();
-
-    let products = getProducts();
-    if (selection === 'FAVOURITES') {
-        products = products.filter(p => isProductInFavourites(p))
-    } else if (selection === 'COMPARISON') {
-        products = products.filter(p => isProductInComparison(p))
-    }
-
-    products.forEach(product => showProduct(product));
-
+function notVisible() {
+    return !document.querySelector('#show_hidden').checked;
 }
 
-
-showProducts();
+const radioButtons = document.querySelectorAll('.radio-toolbar input[type="radio"]');
+radioButtons.forEach(radio => {
+    radio.addEventListener('change', function () {
+        radioButtons.forEach(rb => {
+            rb.checked = false;
+        });
+        radio.checked = true;
+    });
+});
 
 function getProducts() {
     return [

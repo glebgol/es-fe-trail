@@ -17,22 +17,19 @@ img {
     background-color: #21a2e1;
     animation: fade-in 0.3s ease-in-out;
     color: white;
+
 }
 
 .show_hidden_checkbox {
     position: absolute;
-    right: 5%;
+    right: 5px;
     padding: 10px;
 }
 
 .show_hidden {
+    cursor: pointer;
     size: 20px;
 }
-
-
-.filtration {
-}
-
 
 .radio-toolbar {
     display: flex;
@@ -45,12 +42,11 @@ img {
 
 .radio-toolbar label {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 10px 15px;
     border-radius: 50px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
 }
-
 
 .radio-toolbar input[type="radio"]:checked + label {
     background-color: #007bff;
@@ -61,13 +57,11 @@ img {
     color: #ececec;
 }
 
-
-
 nav {
     margin-left: 5%;
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 10px;
     flex-direction: row;
 }
 
@@ -151,7 +145,6 @@ img {
 }
 
 li {
-    /*border: solid 1px;*/
     position: relative;
     justify-content: center;
     list-style: none;
@@ -162,7 +155,6 @@ li {
 }
 
 .product__info {
-    /*border: solid 1px;*/
     position: absolute;
     width: 100%;
     bottom: 5px;
@@ -243,15 +235,6 @@ li:hover .product_actions {
     }
 }
 
-@keyframes fade-out {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
 .product_description {
     text-align: center;
     line-height: 24px;
@@ -288,7 +271,6 @@ li:hover .product_actions {
 }
 
 .hidden_button, .like_button, .comparison_button {
-
     background-color: #d3d1d1;
     border: none;
     color: black;
@@ -298,12 +280,26 @@ li:hover .product_actions {
     width: 50px;
 }
 
-i {
-    margin: auto;
+.hidden_button:hover, .like_button:hover, .comparison_button:hover {
+    background-color: #939393;
 }
 
-.hidden_button:active {
-    background-color: blue;
+.hidden_button_active, .like_button_active, .comparison_button_active {
+    background-color: #5d5d5d;
+    border: none;
+    color: black;
+    margin: 4px 2px;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+}
+
+.hidden_button_active:hover, .like_button_active:hover, .comparison_button_active:hover {
+    background-color: #4b4b4b;
+}
+
+i {
+    margin: auto;
 }
 
 .test {
