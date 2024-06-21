@@ -3,7 +3,7 @@ let selection = 'ALL';
 showProducts();
 
 document.querySelector('nav').addEventListener('click', function (e) {
-    if (e.target.classList.contains('radio-toolbar')) {
+    if (e.target.classList.contains('radio_toolbar')) {
         return;
     }
 
@@ -32,6 +32,7 @@ function showProduct(product) {
 
     const ul = document.querySelector('ul');
     const elem = document.createElement('li');
+    elem.classList = 'product__item';
 
     elem.append(productItem.content.cloneNode(true));
     populateProductElement(elem, product);
@@ -44,13 +45,17 @@ function showProduct(product) {
     ul.append(elem);
 }
 
+function getId(product) {
+    return 'product' + product.id;
+}
+
 function populateProductElement(elem, product) {
-    elem.id = 'product' + product.id;
+    elem.id = getId(product);
 
     const price = elem.querySelector('.discount');
     price.textContent = product.price + '$';
 
-    const oldPrice = elem.querySelector('.old__price')
+    const oldPrice = elem.querySelector('.old_price')
     oldPrice.textContent = product.priceWithoutDiscount + '$'
 
     const image = elem.querySelector('img')
@@ -59,7 +64,7 @@ function populateProductElement(elem, product) {
     const description = elem.querySelector('.product_description');
     description.textContent = product.description;
 
-    const type = elem.querySelector('.product_type');
+    const type = elem.querySelector('.product-type');
     type.textContent = product.productType;
 
     setButtonsValues(elem);
@@ -67,19 +72,21 @@ function populateProductElement(elem, product) {
 }
 
 function setButtonsState(elem, product) {
-    if (getHiddenProducts().has('product' + product.id)) {
+    if (getHiddenProducts().has(getId(product))) {
         elem.querySelector(".hidden_button").classList = "hidden_button_active";
     }
-    if (getFavouriteProducts().has('product' + product.id)) {
+
+    if (getFavouriteProducts().has(getId(product))) {
         elem.querySelector(".like_button").classList = "like_button_active";
     }
-    if (getProductsInComparison().has('product' + product.id)) {
+
+    if (getProductsInComparison().has(getId(product))) {
         elem.querySelector(".comparison_button").classList = "comparison_button_active";
     }
 }
 
 function createStars(elem, rating) {
-    const starsContainer = elem.querySelector('.star-container');
+    const starsContainer = elem.querySelector('.stars__container');
 
     const fullStarsCount = Math.floor(rating);
     const fractionalStarValue = rating - fullStarsCount;
@@ -87,7 +94,7 @@ function createStars(elem, rating) {
 
     for (let i = 0; i < fullStarsCount; i++) {
         const star = document.createElement('div')
-        star.className = "star full";
+        star.className = "star full-star";
         starsContainer.append(star);
     }
 
@@ -187,26 +194,26 @@ function switchProductComparison(product) {
 }
 
 function clearProducts() {
-    document.querySelector('.product__list').innerHTML = '';
+    document.querySelector('.products__list').innerHTML = '';
 }
 
 function isHidden(product) {
-    return getHiddenProducts().has('product' + product.id);
+    return getHiddenProducts().has(getId(product));
 }
 
 function isProductInFavourites(product) {
-    return getFavouriteProducts().has('product' + product.id);
+    return getFavouriteProducts().has(getId(product));
 }
 
 function isProductInComparison(product) {
-    return getProductsInComparison().has('product' + product.id)
+    return getProductsInComparison().has(getId(product))
 }
 
 function notVisible() {
     return !document.querySelector('#show_hidden').checked;
 }
 
-const radioButtons = document.querySelectorAll('.radio-toolbar input[type="radio"]');
+const radioButtons = document.querySelectorAll('.radio_toolbar input[type="radio"]');
 radioButtons.forEach(radio => {
     radio.addEventListener('change', function () {
         radioButtons.forEach(rb => {

@@ -8,8 +8,8 @@
 </head>
 <body>
 <div>
-    <header>
-        <nav class="radio-toolbar">
+    <header class="header">
+        <nav class="nav radio_toolbar">
             <input type="radio" id="all" data-selection="ALL" checked>
             <label class="label" for="all">ALL</label>
 
@@ -18,55 +18,54 @@
 
             <input type="radio" id="comparison" data-selection="COMPARISON">
             <label for="comparison">Comparison</label>
-
         </nav>
-        <div class="show_hidden_checkbox">
+        <div class="show-hidden__checkbox">
             <label for="show_hidden">show hidden</label>
-            <input class="show_hidden" type="checkbox" id="show_hidden" onclick="showProducts()">
+            <input class="show-hidden" type="checkbox" id="show_hidden" onclick="showProducts()">
         </div>
     </header>
-    <main>
-        <ul class="product__list">
+    <main class="main">
+        <ul class="products__list">
         </ul>
     </main>
 </div>
-<footer>
+<footer class="footer">
 </footer>
 </body>
 
 <template id="productItem">
     <div class="product">
-        <div class="newBadge">
+        <div class="new-badge">
             New
         </div>
-        <div class="image">
-            <img src="" alt=""/>
+        <div class="product_image__container">
+            <img class="product__image" src="" alt=""/>
         </div>
         <div class="product_actions">
             <button class="hidden_button" onclick="switchProductVisibility(this.value)">
-                <i class="fa-solid fa-eye"></i>
+                <i class="icon fa-solid fa-eye"></i>
             </button>
             <button class="like_button" onclick="switchProductLike(this.value)">
-                <i class="fa-solid fa-heart"></i>
+                <i class="icon fa-solid fa-heart"></i>
             </button>
             <button class="comparison_button" onclick="switchProductComparison(this.value)">
-                <i class="fa-solid fa-scale-unbalanced-flip"></i>
+                <i class="icon fa-solid fa-scale-unbalanced-flip"></i>
             </button>
         </div>
         <div class="product__info">
-            <div class="product_type">
+            <div class="product-type">
             </div>
-            <div class="star-container">
+            <div class="stars__container">
             </div>
             <div class="product_description">
             </div>
             <div class="price__container">
-                <span class="discount price"></span>
-                <span class="old__price"></span>
+                <span class="discount"></span>
+                <span class="old_price"></span>
             </div>
         </div>
     </div>
-    <button class="add_to_cart"><i class="fa-solid fa-cart-shopping"></i> Add to cart</button>
+    <button class="add_to_cart"><i class="icon fa-solid fa-cart-shopping"></i> Add to cart</button>
 </template>
 
 <script src="./main.js"></script>
