@@ -1,20 +1,20 @@
-let selection = 'ALL';
-
-showProducts();
+document.addEventListener('DOMContentLoaded', showProducts);
 
 document.querySelector('nav').addEventListener('click', function (e) {
     if (e.target.classList.contains('radio_toolbar')) {
         return;
     }
 
-    selection = e.target.dataset.selection;
-    showProducts(selection);
+    setSelection(e.target.dataset.selection);
+    showProducts();
 });
 
 function showProducts() {
     clearProducts();
 
+    const selection = getSelection();
     let products = getProducts();
+
     if (selection === 'FAVOURITES') {
         products = products.filter(p => isProductInFavourites(p))
     } else if (selection === 'COMPARISON') {
@@ -52,20 +52,11 @@ function getId(product) {
 function populateProductElement(elem, product) {
     elem.id = getId(product);
 
-    const price = elem.querySelector('.discount');
-    price.textContent = product.price + '$';
-
-    const oldPrice = elem.querySelector('.old_price')
-    oldPrice.textContent = product.priceWithoutDiscount + '$'
-
-    const image = elem.querySelector('img')
-    image.src = product.image
-
-    const description = elem.querySelector('.product_description');
-    description.textContent = product.description;
-
-    const type = elem.querySelector('.product-type');
-    type.textContent = product.productType;
+    elem.querySelector('.discount').textContent = product.price + '$';
+    elem.querySelector('.old_price').textContent = product.priceWithoutDiscount + '$';
+    elem.querySelector('img').src = product.image;
+    elem.querySelector('.product_description').textContent = product.description;
+    elem.querySelector('.product-type').textContent = product.productType;
 
     setButtonsValues(elem);
     createStars(elem, product.rating);
@@ -114,14 +105,51 @@ function createStars(elem, rating) {
 }
 
 function setButtonsValues(elem) {
-    const hiddenButton = elem.querySelector('.hidden_button');
-    hiddenButton.value = elem.id;
+    elem.querySelector('.hidden_button').value = elem.id;
+    elem.querySelector('.like_button').value = elem.id;
+    elem.querySelector('.comparison_button').value = elem.id;
+}
 
-    const likeButton = elem.querySelector('.like_button');
-    likeButton.value = elem.id;
+function switchProductVisibility(product) {
+    const hiddenProducts = getHiddenProducts();
 
-    const comparisonButton = elem.querySelector('.comparison_button');
-    comparisonButton.value = elem.id;
+    if (hiddenProducts.has(product)) {
+        setPassiveNotVisibilityButton(product);
+        hiddenProducts.delete(product);
+    } else {
+        setActiveNotVisibilityButton(product);
+        hiddenProducts.add(product);
+    }
+
+    localStorage.setItem('hiddenProducts', Array.from(hiddenProducts).toString());
+}
+
+function switchProductLike(product) {
+    const favouriteProducts = getFavouriteProducts();
+
+    if (favouriteProducts.has(product)) {
+        setPassiveLikeButton(product);
+        favouriteProducts.delete(product);
+    } else {
+        setActiveLikeButton(product);
+        favouriteProducts.add(product);
+    }
+
+    localStorage.setItem('favouriteProducts', Array.from(favouriteProducts).toString());
+}
+
+function switchProductComparison(product) {
+    const productsInComparison = getProductsInComparison();
+
+    if (productsInComparison.has(product)) {
+        setPassiveComparisonButton(product);
+        productsInComparison.delete(product);
+    } else {
+        setActiveComparisonButton(product);
+        productsInComparison.add(product);
+    }
+
+    localStorage.setItem('productsInComparison', Array.from(productsInComparison).toString());
 }
 
 function getHiddenProducts() {
@@ -154,43 +182,42 @@ function getProductsInComparison() {
     return new Set(productsInComparison.split(',').filter(e => e));
 }
 
-function switchProductVisibility(product) {
-    const hiddenProducts = getHiddenProducts();
+function setActiveNotVisibilityButton(product) {
+    const elem = document.querySelector('.hidden_button[value="' + product + '"]');
+    elem.classList = "hidden_button_active";
 
-    if (hiddenProducts.has(product)) {
-        hiddenProducts.delete(product);
+    if (visible()) {
+        document.querySelector('#' + product).style = "opacity: 0.5";
     } else {
-        hiddenProducts.add(product);
+        document.querySelector('#' + product).style = 'display:none';
     }
-
-    localStorage.setItem('hiddenProducts', Array.from(hiddenProducts).toString());
-    showProducts();
 }
 
-function switchProductLike(product) {
-    const favouriteProducts = getFavouriteProducts();
-
-    if (favouriteProducts.has(product)) {
-        favouriteProducts.delete(product);
-    } else {
-        favouriteProducts.add(product);
-    }
-
-    localStorage.setItem('favouriteProducts', Array.from(favouriteProducts).toString());
-    showProducts();
+function setPassiveNotVisibilityButton(product) {
+    document.querySelector('#' + product).style = 'display:block';
+    document.querySelector('.hidden_button_active[value="' + product + '"]').classList = "hidden_button";
 }
 
-function switchProductComparison(product) {
-    const productsInComparison = getProductsInComparison();
+function setActiveLikeButton(product) {
+    document.querySelector('.like_button[value="' + product + '"]').classList = "like_button_active";
+}
 
-    if (productsInComparison.has(product)) {
-        productsInComparison.delete(product);
-    } else {
-        productsInComparison.add(product);
+function setPassiveLikeButton(product) {
+    document.querySelector('.like_button_active[value="' + product + '"]').classList = "like_button";
+    if (getSelection() === 'FAVOURITES') {
+        document.querySelector('#' + product).style = 'display:none';
     }
+}
 
-    localStorage.setItem('productsInComparison', Array.from(productsInComparison).toString());
-    showProducts();
+function setActiveComparisonButton(product) {
+    document.querySelector('.comparison_button[value="' + product + '"]').classList = "comparison_button_active";
+}
+
+function setPassiveComparisonButton(product) {
+    document.querySelector('.comparison_button_active[value="' + product + '"]').classList = "comparison_button";
+    if (getSelection() === 'COMPARISON') {
+        document.querySelector('#' + product).style = 'display:none';
+    }
 }
 
 function clearProducts() {
@@ -209,8 +236,20 @@ function isProductInComparison(product) {
     return getProductsInComparison().has(getId(product))
 }
 
+function visible() {
+    return document.querySelector('#show_hidden').checked;
+}
+
 function notVisible() {
-    return !document.querySelector('#show_hidden').checked;
+    return !visible();
+}
+
+function getSelection() {
+    return localStorage.getItem('selection');
+}
+
+function setSelection(selection) {
+    return localStorage.setItem('selection', selection);
 }
 
 const radioButtons = document.querySelectorAll('.radio_toolbar input[type="radio"]');
@@ -220,6 +259,12 @@ radioButtons.forEach(radio => {
             rb.checked = false;
         });
         radio.checked = true;
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function ()  {
+    document.querySelectorAll('.radio_toolbar input[type="radio"]').forEach(radio => {
+        radio.checked = radio.dataset.selection === getSelection();
     });
 });
 

@@ -90,6 +90,10 @@ body {
     padding: 10px;
 }
 
+.show-hidden__checkbox label {
+    cursor: pointer;
+}
+
 .show-hidden {
     cursor: pointer;
     size: 20px;
@@ -114,6 +118,11 @@ body {
 
 .radio_toolbar input[type="radio"]:checked + label {
     background-color: #007bff;
+    color: white;
+}
+
+.radio_toolbar input[type="radio"]:hover + label {
+    background-color: #002629;
     color: white;
 }
 
@@ -212,7 +221,6 @@ body {
 
 .product__item:hover .new-badge {
     visibility: hidden;
-    animation: fade-in 0.7s ease-in-out;
 }
 
 .product__item:hover .product_actions {
@@ -261,7 +269,6 @@ body {
     flex-direction: column;
     right: 5px;
     top: 8px;
-
 }
 
 .hidden_button, .like_button, .comparison_button {
